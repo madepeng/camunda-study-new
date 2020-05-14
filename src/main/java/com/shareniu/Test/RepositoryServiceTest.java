@@ -165,4 +165,21 @@ public class RepositoryServiceTest {
                 startProcessInstanceByKey("trip");
     }
 
+    @Test
+    public void error1Deployment() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("error1")
+                .source("error1")
+                .addClasspathResource("com/shareniu/test/error1.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void error1() {
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("Process_1q3886a");
+    }
+
 }

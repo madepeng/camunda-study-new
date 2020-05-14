@@ -8,11 +8,7 @@ public class BookFlightAdapter implements JavaDelegate {
   public void execute(org.camunda.bpm.engine.delegate.DelegateExecution execution) throws Exception {
 
      System.out.println("book flight crashes");
-     
-     if (true) {
-       throw new RuntimeException("Flight booking did not work");
-     }
-    
+
   }
 
 

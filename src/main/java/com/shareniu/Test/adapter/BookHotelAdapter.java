@@ -8,7 +8,9 @@ public class BookHotelAdapter implements JavaDelegate {
   public void execute(org.camunda.bpm.engine.delegate.DelegateExecution execution) throws Exception {
 
     System.out.println("book hotel car");
-
+    if (true) {
+      throw new RuntimeException("Flight booking did not work");
+    }
   }
 
 }
