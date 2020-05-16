@@ -182,4 +182,38 @@ public class RepositoryServiceTest {
                 startProcessInstanceByKey("Process_1q3886a");
     }
 
+    @Test
+    public void cancel1Deployment() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("cancel1")
+                .source("cancel1")
+                .addClasspathResource("com/shareniu/test/cancel1.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void cancel1() {
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("cancel1");
+    }
+
+    @Test
+    public void callDeployment() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("pool")
+                .source("pool")
+                .addClasspathResource("com/shareniu/test/pool.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void call() {
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("Process_1to6arj");
+    }
+
 }

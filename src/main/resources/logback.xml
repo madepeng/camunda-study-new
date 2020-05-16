@@ -12,41 +12,41 @@
 
   <logger name="javax.activation" level="info" />
 
-  <logger name="org.springframework" level="error" />
+  <logger name="org.springframework" level="info" />
 
-  <logger name="org.camunda" level="error" />
+  <logger name="org.camunda" level="info" />
 
-  <logger name="org.camunda.bpm.engine.test" level="error" />
-
-
-  <logger name="org.camunda.bpm.engine.impl.persistence.entity" level="error" />
-  <logger name="org.camunda.bpm.engine.history" level="error" />
-
-  <logger name="org.camunda.bpm.engine.bpmn.parser" level="error" />
-  <logger name="org.camunda.bpm.engine.bpmn.behavior" level="error" />
-
-  <logger name="org.camunda.bpm.engine.cmmn.transformer" level="error" />
-  <logger name="org.camunda.bpm.engine.cmmn.behavior" level="error" />
-  <logger name="org.camunda.bpm.engine.cmmn.operation" level="error" />
-
-  <logger name="org.camunda.bpm.engine.cmd" level="error" />
-  <logger name="org.camunda.bpm.engine.persistence" level="error" />
-  <logger name="org.camunda.bpm.engine.tx" level="error" />
-  <logger name="org.camunda.bpm.engine.cfg" level="error" />
-  <logger name="org.camunda.bpm.engine.jobexecutor" level="error" />
-  <logger name="org.camunda.bpm.engine.context" level="error" />
-  <logger name="org.camunda.bpm.engine.core" level="error" />
-  <logger name="org.camunda.bpm.engine.pvm" level="error" />
-
-  <logger name="org.camunda.bpm.engine.metrics" level="error" />
-  <logger name="org.camunda.bpm.engine.util" level="error" />
-
-  <logger name="org.camunda.bpm.application" level="error" />
-  <logger name="org.camunda.bpm.container" level="error" />
+  <logger name="org.camunda.bpm.engine.test" level="info" />
 
 
+  <logger name="org.camunda.bpm.engine.impl.persistence.entity" level="info" />
+  <logger name="org.camunda.bpm.engine.history" level="info" />
 
-  <root level="debug">
+  <logger name="org.camunda.bpm.engine.bpmn.parser" level="info" />
+  <logger name="org.camunda.bpm.engine.bpmn.behavior" level="info" />
+
+  <logger name="org.camunda.bpm.engine.cmmn.transformer" level="info" />
+  <logger name="org.camunda.bpm.engine.cmmn.behavior" level="info" />
+  <logger name="org.camunda.bpm.engine.cmmn.operation" level="info" />
+
+  <logger name="org.camunda.bpm.engine.cmd" level="info" />
+  <logger name="org.camunda.bpm.engine.persistence" level="info" />
+  <logger name="org.camunda.bpm.engine.tx" level="info" />
+  <logger name="org.camunda.bpm.engine.cfg" level="info" />
+  <logger name="org.camunda.bpm.engine.jobexecutor" level="info" />
+  <logger name="org.camunda.bpm.engine.context" level="info" />
+  <logger name="org.camunda.bpm.engine.core" level="info" />
+  <logger name="org.camunda.bpm.engine.pvm" level="info" />
+
+  <logger name="org.camunda.bpm.engine.metrics" level="info" />
+  <logger name="org.camunda.bpm.engine.util" level="info" />
+
+  <logger name="org.camunda.bpm.application" level="info" />
+  <logger name="org.camunda.bpm.container" level="info" />
+
+
+
+  <root level="info">
     <appender-ref ref="STDOUT" />
   </root>
 
