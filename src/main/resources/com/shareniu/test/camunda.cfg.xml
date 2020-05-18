@@ -15,21 +15,10 @@
     <property name="databaseSchemaUpdate" value="true" />
     <property name="metricsEnabled" value="false"></property>
     <property name="dbHistoryUsed" value="true"></property>
-  <property name="historyLevel" value="HISTORY_LEVEL_FULL"></property>
-    <property name="processEnginePlugins">
-      <list>
-
-        <bean id="shareniuProcessEnginePlugin" class="com.shareniu.ch1.ShareniuProcessEnginePlugin"></bean>
-      </list>
-
-    </property>
+    <property name="historyLevel" value="HISTORY_LEVEL_FULL"></property>
+    <property name="jobExecutorActivate" value="true"></property>
 
   </bean>
 
-
-  <bean id="testA" class="com.shareniu.ch1.TestA">
-    <property name="age" value="18"></property>
-    <property name="name" value="分享牛"></property>
-  </bean>
 
 </beans>

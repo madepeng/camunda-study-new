@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="dmn1" name="dmn1" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
+  <decision id="Decision_Test" name="配置测试">
+    <extensionElements>
+      <biodi:bounds x="150" y="80" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="decisionTable_1">
+      <input id="input_1" label="输入值" camunda:inputVariable="InputValue">
+        <inputExpression id="inputExpression_1" typeRef="integer">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output_1" label="outputValue" name="outputValue" typeRef="string" />
+      <rule id="DecisionRule_137e715">
+        <inputEntry id="UnaryTests_0c309xq">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_18befnk">
+          <text>"a"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0797srh">
+        <inputEntry id="UnaryTests_0e0pzlb">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ftpy5z">
+          <text>"b"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1q5071a">
+        <inputEntry id="UnaryTests_0b95f9o">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1sdrwxb">
+          <text>"c"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_02lbpma">
+        <inputEntry id="UnaryTests_0qt07kc">
+          <text>4</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_18by14w">
+          <text>"d"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

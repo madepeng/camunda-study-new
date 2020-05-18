@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_14ag4zq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
+  <bpmn:process id="group" name="group" isExecutable="true">
+    <bpmn:startEvent id="Event_1f2t6j9">
+      <bpmn:outgoing>Flow_138pj6x</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_138pj6x" sourceRef="Event_1f2t6j9" targetRef="Activity_148ull9" />
+    <bpmn:sequenceFlow id="Flow_0kfo4dk" sourceRef="Activity_148ull9" targetRef="Activity_01ykzym" />
+    <bpmn:endEvent id="Event_0nl15v1">
+      <bpmn:incoming>Flow_0zfk8ns</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0zfk8ns" sourceRef="Activity_01ykzym" targetRef="Event_0nl15v1" />
+    <bpmn:serviceTask id="Activity_148ull9" name="group1" camunda:class="com.shareniu.Test.group.Group1">
+      <bpmn:incoming>Flow_138pj6x</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kfo4dk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_01ykzym" name="group2" camunda:class="com.shareniu.Test.group.Group2">
+      <bpmn:incoming>Flow_0kfo4dk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zfk8ns</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:group id="Group_1wytyqk" categoryValueRef="CategoryValue_0f1w8py" />
+    <bpmn:group id="Group_09wtzqp" categoryValueRef="CategoryValue_0e3z3xd" />
+  </bpmn:process>
+  <bpmn:category id="Category_07l3o5q">
+    <bpmn:categoryValue id="CategoryValue_0f1w8py" value="g1" />
+  </bpmn:category>
+  <bpmn:category id="Category_1092rnb">
+    <bpmn:categoryValue id="CategoryValue_0e3z3xd" value="g2" />
+  </bpmn:category>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="group">
+      <bpmndi:BPMNEdge id="Flow_138pj6x_di" bpmnElement="Flow_138pj6x">
+        <di:waypoint x="298" y="140" />
+        <di:waypoint x="329" y="140" />
+        <di:waypoint x="329" y="210" />
+        <di:waypoint x="350" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kfo4dk_di" bpmnElement="Flow_0kfo4dk">
+        <di:waypoint x="400" y="250" />
+        <di:waypoint x="400" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zfk8ns_di" bpmnElement="Flow_0zfk8ns">
+        <di:waypoint x="450" y="470" />
+        <di:waypoint x="502" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1f2t6j9_di" bpmnElement="Event_1f2t6j9">
+        <dc:Bounds x="262" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0nl15v1_di" bpmnElement="Event_0nl15v1">
+        <dc:Bounds x="502" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06km8xz_di" bpmnElement="Activity_148ull9">
+        <dc:Bounds x="350" y="170" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04rm5c9_di" bpmnElement="Activity_01ykzym">
+        <dc:Bounds x="350" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Group_1wytyqk_di" bpmnElement="Group_1wytyqk">
+        <dc:Bounds x="160" y="80" width="470" height="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="390" y="87" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Group_09wtzqp_di" bpmnElement="Group_09wtzqp">
+        <dc:Bounds x="300" y="380" width="300" height="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="444" y="387" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,6 +1,7 @@
 package com.shareniu.Test;
 
 import com.shareniu.Test.bean.ValueBean;
+import org.camunda.bpm.dmn.engine.DmnDecisionResult;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.repository.Deployment;
@@ -27,16 +28,20 @@ public class RepositoryServiceTest {
     RuntimeService runtimeService;
     TaskService taskService;
     DecisionService decisionService;
+    ManagementService managementService;
 
     @Before
     public void init() {
         processEngineConfiguration = (ProcessEngineConfigurationImpl) ProcessEngineConfiguration
                 .createProcessEngineConfigurationFromResource("com/shareniu/test/camunda.cfg.xml");
+        processEngineConfiguration.setJobExecutorActivate(true);
+        processEngineConfiguration.setJobExecutorAcquireByDueDate(true);
         ProcessEngine processEngine = processEngineConfiguration.buildProcessEngine();
         repositoryService = processEngine.getRepositoryService();
         runtimeService = processEngine.getRuntimeService();
         taskService = processEngine.getTaskService();
         decisionService = processEngine.getDecisionService();
+        managementService = processEngine.getManagementService();
     }
 
     @Test
@@ -216,4 +221,119 @@ public class RepositoryServiceTest {
                 startProcessInstanceByKey("Process_1to6arj");
     }
 
+    @Test
+    public void groupDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("group")
+                .source("group")
+                .addClasspathResource("com/shareniu/test/group.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void group() {
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("group");
+    }
+
+    @Test
+    public void varDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("var")
+                .source("var")
+                .addClasspathResource("com/shareniu/test/var.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void var() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("a",1);
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("var", map);
+    }
+
+    @Test
+    public void timerDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("timer")
+                .source("timer")
+                .addClasspathResource("com/shareniu/test/timer.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void timer() throws InterruptedException {
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("timer");
+        System.out.println("end");
+    }
+
+    @Test
+    public void timer1Del() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("time4")
+                .source("time4")
+                .addClasspathResource("com/shareniu/test/time4.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void timer1() {
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("time4");
+    }
+
+    @Test
+    public void timer1job1() {
+        managementService.executeJob("19906");
+    }
+
+
+    @Test
+    public void timer2Del() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("timer2")
+                .source("timer2")
+                .addClasspathResource("com/shareniu/test/timer2.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void timer2() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("index",0);
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("Process_0n3nq5d",map);
+    }
+
+
+    @Test
+    public void dmn1Del() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("dmn1")
+                .source("dmn1")
+                .addClasspathResource("com/shareniu/test/dmn1.dmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void dmn1() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("InputValue",1);
+        DmnDecisionResult dmn1 = decisionService.evaluateDecisionByKey("Decision_Test").variables(map).evaluate();
+        System.out.println(dmn1.getSingleResult().getEntryMap());
+    }
 }
