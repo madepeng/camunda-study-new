@@ -100,20 +100,20 @@ public class RepositoryServiceTest {
     public void startProcessInstanceByKeyAndId() {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", "1");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("leave","vaddr", map);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("leave", "vaddr", map);
     }
 
     @Test
     public void service1() {
         ProcessInstance processInstance = runtimeService.
-                startProcessInstanceByKey("service1","123456");
+                startProcessInstanceByKey("service1", "123456");
     }
 
     @Test
     public void service2() {
         Map<String, Object> map = new HashMap<>();
         map.put("test", new ValueBean("okokok"));
-        map.put("result","fdfsdf");
+        map.put("result", "fdfsdf");
         ProcessInstanceWithVariables service2 = runtimeService.
                 createProcessInstanceByKey("service2").setVariables(map).executeWithVariablesInReturn();
         System.out.println("result:" + service2.getVariables().values());
@@ -123,9 +123,9 @@ public class RepositoryServiceTest {
     public void service3() {
         Map<String, Object> map = new HashMap<>();
         map.put("test", new ValueBean("okokok"));
-        map.put("result","fdfsdf");
+        map.put("result", "fdfsdf");
         ProcessInstance processInstance = runtimeService.
-                startProcessInstanceByKey("service3","123456",map);
+                startProcessInstanceByKey("service3", "123456", map);
     }
 
     @Test
@@ -252,7 +252,7 @@ public class RepositoryServiceTest {
     @Test
     public void var() {
         Map<String, Object> map = new HashMap<>();
-        map.put("a",1);
+        map.put("a", 1);
         ProcessInstance trip = runtimeService.
                 startProcessInstanceByKey("var", map);
     }
@@ -312,9 +312,9 @@ public class RepositoryServiceTest {
     @Test
     public void timer2() {
         Map<String, Object> map = new HashMap<>();
-        map.put("index",0);
+        map.put("index", 0);
         ProcessInstance trip = runtimeService.
-                startProcessInstanceByKey("Process_0n3nq5d",map);
+                startProcessInstanceByKey("Process_0n3nq5d", map);
     }
 
 
@@ -332,8 +332,48 @@ public class RepositoryServiceTest {
     @Test
     public void dmn1() {
         Map<String, Object> map = new HashMap<>();
-        map.put("InputValue",1);
+        map.put("InputValue", 1);
         DmnDecisionResult dmn1 = decisionService.evaluateDecisionByKey("Decision_Test").variables(map).evaluate();
         System.out.println(dmn1.getSingleResult().getEntryMap());
+    }
+
+
+    @Test
+    public void dm1_processDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("dm1_process")
+                .source("dm1_process")
+                .addClasspathResource("com/shareniu/test/dm1_process.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void dm1_process() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("InputValue", 1);
+        ProcessInstanceWithVariables dm1_process = runtimeService.createProcessInstanceByKey("dm1_process").setVariables(map).executeWithVariablesInReturn();
+        System.out.println(dm1_process.getVariables().get("result"));
+    }
+
+
+    @Test
+    public void gatewayDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("gateway")
+                .source("gateway")
+                .addClasspathResource("com/shareniu/test/gateway.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void gateway() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", 0);
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("gateway", map);
     }
 }

@@ -7,7 +7,7 @@
     <decisionTable id="decisionTable_1">
       <input id="input_1" label="输入值" camunda:inputVariable="InputValue">
         <inputExpression id="inputExpression_1" typeRef="integer">
-          <text></text>
+          <text>InputValue + 1</text>
         </inputExpression>
       </input>
       <output id="output_1" label="outputValue" name="outputValue" typeRef="string" />
