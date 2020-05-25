@@ -6,10 +6,18 @@
 
   <bean id="processEngineConfiguration" class="org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
 
-    <property name="jdbcUrl" value="jdbc:mysql://pacfg-c.mysql.qa.bx:6221/pasbpm?characterEncoding=UTF-8" />
+    <!--C环境-->
+    <!--<property name="jdbcUrl" value="jdbc:mysql://pacfg-c.mysql.qa.bx:6221/pasbpm?characterEncoding=UTF-8" />
     <property name="jdbcDriver" value="com.mysql.jdbc.Driver" />
     <property name="jdbcUsername" value="bx_pacfg" />
-    <property name="jdbcPassword" value="44d18bc23f783a283d9ad67cbe0e5942" />
+    <property name="jdbcPassword" value="44d18bc23f783a283d9ad67cbe0e5942" />-->
+
+    <!--D环境-->
+    <property name="jdbcUrl" value="jdbc:mysql://pacfg-d.mysql.qa.bx:6220/pasbpm?characterEncoding=UTF-8" />
+    <property name="jdbcDriver" value="com.mysql.jdbc.Driver" />
+    <property name="jdbcUsername" value="bx_pacfg" />
+    <property name="jdbcPassword" value="ebc63c996e5ec7eb97fa44f53f2ca22a" />
+
 
     <!-- Database configurations   isMetricsEnabled-->
     <property name="databaseSchemaUpdate" value="true" />

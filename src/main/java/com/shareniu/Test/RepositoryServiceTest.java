@@ -7,6 +7,7 @@ import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.camunda.bpm.engine.repository.DeploymentBuilder;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
+import org.camunda.bpm.engine.repository.ProcessDefinitionQuery;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.runtime.ProcessInstanceWithVariables;
 import org.junit.Before;
@@ -375,5 +376,50 @@ public class RepositoryServiceTest {
         map.put("index", 0);
         ProcessInstance trip = runtimeService.
                 startProcessInstanceByKey("gateway", map);
+    }
+
+    @Test
+    public void lastVersion() {
+        int gateway = repositoryService.createProcessDefinitionQuery().processDefinitionKey("gateway").latestVersion().singleResult().getVersion();
+        System.out.println("result:" + gateway);
+    }
+
+    @Test
+    public void BOF_WITHDRAWDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("BOF_WITHDRAW")
+                .source("BOF_WITHDRAW")
+                .addClasspathResource("com/shareniu/test/BOF_WITHDRAW.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void BOF_WITHDRAW() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", 0);
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("gateway", map);
+    }
+
+
+    @Test
+    public void listenerDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("listener")
+                .source("listener")
+                .addClasspathResource("com/shareniu/test/listener.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void listener() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", 0);
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("listener", map);
     }
 }
