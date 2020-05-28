@@ -417,9 +417,26 @@ public class RepositoryServiceTest {
 
     @Test
     public void listener() {
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("listener");
+    }
+
+    @Test
+    public void gatewayvarsDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("gatewayvars")
+                .source("gatewayvars")
+                .addClasspathResource("com/shareniu/test/gatewayvars.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void gatewayvars() {
         Map<String, Object> map = new HashMap<>();
         map.put("index", 0);
         ProcessInstance trip = runtimeService.
-                startProcessInstanceByKey("listener", map);
+                startProcessInstanceByKey("gatewayvars", map);
     }
 }
