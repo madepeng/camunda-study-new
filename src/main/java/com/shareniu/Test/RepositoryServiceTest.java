@@ -439,4 +439,24 @@ public class RepositoryServiceTest {
         ProcessInstance trip = runtimeService.
                 startProcessInstanceByKey("gatewayvars", map);
     }
+
+
+    @Test
+    public void COMPOSITION_WITHDRAWDel() {
+        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
+        Deployment deployment = deploymentBuilder
+                .name("COMPOSITION_WITHDRAWDel")
+                .source("COMPOSITION_WITHDRAWDel")
+                .addClasspathResource("com/shareniu/test/COMPOSITION_WITHDRAW.bpmn")
+                .deploy();
+        System.out.println("result:" + deployment);
+    }
+
+    @Test
+    public void COMPOSITION_WITHDRAW() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", 0);
+        ProcessInstance trip = runtimeService.
+                startProcessInstanceByKey("gatewayvars", map);
+    }
 }

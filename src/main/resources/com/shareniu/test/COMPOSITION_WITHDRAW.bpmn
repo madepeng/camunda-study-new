@@ -1,0 +1,1263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_16i4z6i" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.1.0">
+  <bpmn:process id="BOF_WITHDRAW" name="组合提现" isExecutable="true">
+    <bpmn:endEvent id="EndEvent_0bcse8z">
+      <bpmn:incoming>SequenceFlow_0ddbx0t</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0fwzhkq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Task_1ssz561" name="设置status=2">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="status">2</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0273eu3</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1pw1owy</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ig0pmg</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_1ur2lyu" name="设置status=1">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="status">1</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1avdmop</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0zcifao</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ofk0l5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_0lur42g" name="设置status=3">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="status">3</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_03g98xb</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_11mkw7o</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1832ixv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ddbx0t</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_0ddbx0t" sourceRef="Task_0lur42g" targetRef="EndEvent_0bcse8z" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ofk0l5" sourceRef="Task_1ur2lyu" targetRef="ServiceTask_1pfu5k8" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0vawkvx" default="SequenceFlow_11mkw7o">
+      <bpmn:incoming>SequenceFlow_0rweac7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13v1afg</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0273eu3</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_11mkw7o</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_13v1afg" name="成功" sourceRef="ExclusiveGateway_0vawkvx" targetRef="Gateway_1ott20n">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ServiceTask_1p01o9b_fundStatus== 1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1l8jrvt" default="SequenceFlow_03g98xb">
+      <bpmn:incoming>SequenceFlow_0f7nf1s</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1avdmop</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_03g98xb</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0whelso</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1avdmop" name="成功" sourceRef="ExclusiveGateway_1l8jrvt" targetRef="Task_1ur2lyu">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${va2OutStatus== 1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_03g98xb" name="处理中" sourceRef="ExclusiveGateway_1l8jrvt" targetRef="Task_0lur42g" />
+    <bpmn:sequenceFlow id="SequenceFlow_0273eu3" name="失败" sourceRef="ExclusiveGateway_0vawkvx" targetRef="Task_1ssz561">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ServiceTask_1p01o9b_fundStatus== 2}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_1ott20n" default="SequenceFlow_0zcifao">
+      <bpmn:incoming>SequenceFlow_13v1afg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lv3cia</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0zcifao</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0lv3cia" name="赎回到他行卡" sourceRef="Gateway_1ott20n" targetRef="SubProcess_1wrdmk3">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${false == global.prop('isAiBankOfRecCardNo').value()}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0zcifao" sourceRef="Gateway_1ott20n" targetRef="Task_1ur2lyu" />
+    <bpmn:serviceTask id="ServiceTask_1pfu5k8" name="清理异常" camunda:expression="${execution.removeVariable(&#34;exception&#34;)}">
+      <bpmn:incoming>SequenceFlow_0ofk0l5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0fwzhkq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0fwzhkq" sourceRef="ServiceTask_1pfu5k8" targetRef="EndEvent_0bcse8z" />
+    <bpmn:sequenceFlow id="SequenceFlow_0whelso" name="失败" sourceRef="ExclusiveGateway_1l8jrvt" targetRef="EndEvent_1dm79le">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${va2OutStatus== 2}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_11mkw7o" name="处理中" sourceRef="ExclusiveGateway_0vawkvx" targetRef="Task_0lur42g" />
+    <bpmn:subProcess id="SubProcess_1j0yirl" name="理财赎回带幂等重试">
+      <bpmn:incoming>SequenceFlow_1i9e7a9</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1syiui9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0rweac7</bpmn:outgoing>
+      <bpmn:endEvent id="EndEvent_0e2j5xi">
+        <bpmn:incoming>SequenceFlow_15qy8np</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:scriptTask id="ScriptTask_164fvis" name="休眠" scriptFormat="groovy">
+        <bpmn:incoming>SequenceFlow_0qrak0j</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0knsy78</bpmn:outgoing>
+        <bpmn:script>sleep(100);</bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:exclusiveGateway id="ExclusiveGateway_0qf1dxs" default="SequenceFlow_15qy8np">
+        <bpmn:incoming>SequenceFlow_1a9gbzt</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_15qy8np</bpmn:outgoing>
+        <bpmn:outgoing>SequenceFlow_0qrak0j</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:serviceTask id="ServiceTask_1p01o9b" name="幂等理财赎回" camunda:delegateExpression="${freezeServiceTask}">
+        <bpmn:extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="acctChangeType">BOF_WITHDRAW</camunda:inputParameter>
+            <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+            <camunda:inputParameter name="freezeTradeInfo">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("tradeAmount", global.prop('tradeAmount'));
+              tmp.prop("baseAcctNo", global.prop('baseAcctNo')); 
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              if (global.hasProp('sceneType') &amp;&amp; global.prop('sceneType').value() == 'ST010004') {
+                 tmp.prop("bofTransAction", '1002');
+              } else {		     tmp.prop("bofTransAction", '1007');
+			  }</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="subSeqNo">
+              <camunda:script scriptFormat="Groovy">if (execution.hasVariable('ServiceTask_1p01o9b_subSeqNo')) {
+            subSeqNo = execution.getVariable('ServiceTask_1p01o9b_subSeqNo');
+          }</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="fundOrderNo">
+              <camunda:script scriptFormat="Groovy">if (execution.hasVariable('ServiceTask_1p01o9b_fundOrderNo')) {
+            fundOrderNo = execution.getVariable('ServiceTask_1p01o9b_fundOrderNo');
+          }</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="fromStatus">3</camunda:inputParameter>
+            <camunda:inputParameter name="fundDetail">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");     
+              tmp.prop("systemId", global.prop('systemId'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              if (global.hasProp('baseCardNo')) {
+                  tmp.prop("cardNo", global.prop('baseCardNo'));
+              }
+              tmp.prop("orderNo", head.prop('transId'));
+              tmp.prop("combAcctType", global.prop('combAcctType'));
+              tmp.prop("combAcctChildType", global.prop('combAcctChildType'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("acctChangeType", 'BOF_WITHDRAW');
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("fundStatus", 3);
+              tmp.prop("amount", global.prop('tradeAmount'));
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              tmp.prop("payerAcctNo", global.prop('baseAcctNo'));
+              tmp.prop("payeeAcctNo", global.prop('payeeAcctNo'));
+              if (global.hasProp('sceneType')) {
+                 tmp.prop("sceneType", global.prop('sceneType'));
+              }
+              tmp.prop("debitSign", 2);
+              tmp.prop("creditSign", 0);</camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="ServiceTask_1p01o9b_subSeqNo">${subSeqNo}</camunda:outputParameter>
+            <camunda:outputParameter name="ServiceTask_1p01o9b_fundStatus">${fundStatus}</camunda:outputParameter>
+            <camunda:outputParameter name="ServiceTask_1p01o9b_fundOrderNo">${fundOrderNo}</camunda:outputParameter>
+            <camunda:outputParameter name="ServiceTask_1p01o9b_freezeSeqNo">${execution.hasVariableLocal('freezeSeqNo')? freezeSeqNo : null}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:failedJobRetryTimeCycle>R0/PT5M</camunda:failedJobRetryTimeCycle>
+          <camunda:executionListener delegateExpression="${createFundDetailListener}" event="start" />
+          <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>SequenceFlow_0m7y4p0</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1a9gbzt</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:scriptTask id="ScriptTask_18xyk6k" name="设置index" scriptFormat="groovy">
+        <bpmn:incoming>SequenceFlow_067avdo</bpmn:incoming>
+        <bpmn:incoming>SequenceFlow_0knsy78</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0m7y4p0</bpmn:outgoing>
+        <bpmn:script>index = 0;
+          if (execution.hasVariableLocal('retryIndex')) {
+            index = execution.getVariableLocal('retryIndex');
+          }
+          index++;
+          execution.setVariableLocal('retryIndex', index);</bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:startEvent id="StartEvent_0fb2yv4">
+        <bpmn:outgoing>SequenceFlow_067avdo</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="SequenceFlow_067avdo" sourceRef="StartEvent_0fb2yv4" targetRef="ScriptTask_18xyk6k" />
+      <bpmn:sequenceFlow id="SequenceFlow_0m7y4p0" sourceRef="ScriptTask_18xyk6k" targetRef="ServiceTask_1p01o9b" />
+      <bpmn:sequenceFlow id="SequenceFlow_1a9gbzt" sourceRef="ServiceTask_1p01o9b" targetRef="ExclusiveGateway_0qf1dxs" />
+      <bpmn:sequenceFlow id="SequenceFlow_0knsy78" sourceRef="ScriptTask_164fvis" targetRef="ScriptTask_18xyk6k" />
+      <bpmn:sequenceFlow id="SequenceFlow_15qy8np" sourceRef="ExclusiveGateway_0qf1dxs" targetRef="EndEvent_0e2j5xi" />
+      <bpmn:sequenceFlow id="SequenceFlow_0qrak0j" sourceRef="ExclusiveGateway_0qf1dxs" targetRef="ScriptTask_164fvis">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ServiceTask_1p01o9b_fundStatus==3&amp;&amp;retryIndex&lt;3}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="SequenceFlow_0rweac7" sourceRef="SubProcess_1j0yirl" targetRef="ExclusiveGateway_0vawkvx" />
+    <bpmn:endEvent id="EndEvent_1dm79le">
+      <bpmn:incoming>SequenceFlow_0whelso</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_0wufm3t" />
+    </bpmn:endEvent>
+    <bpmn:subProcess id="SubProcess_0i7abqv" name="解冻支付失败后解冻余额" triggeredByEvent="true">
+      <bpmn:startEvent id="StartEvent_1bga5if">
+        <bpmn:outgoing>SequenceFlow_01axdm2</bpmn:outgoing>
+        <bpmn:errorEventDefinition errorRef="Error_1pi1dc6" />
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="SequenceFlow_01axdm2" sourceRef="StartEvent_1bga5if" targetRef="IntermediateThrowEvent_0zhrnkl" />
+      <bpmn:endEvent id="EndEvent_1dqvy5c">
+        <bpmn:incoming>SequenceFlow_0rxsnmk</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="SequenceFlow_0rxsnmk" sourceRef="IntermediateThrowEvent_0zhrnkl" targetRef="EndEvent_1dqvy5c" />
+      <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0zhrnkl">
+        <bpmn:incoming>SequenceFlow_01axdm2</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0rxsnmk</bpmn:outgoing>
+        <bpmn:compensateEventDefinition />
+      </bpmn:intermediateThrowEvent>
+    </bpmn:subProcess>
+    <bpmn:boundaryEvent id="BoundaryEvent_0kua7kr" attachedToRef="SubProcess_1j0yirl">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="ServiceTask_0u3zozm" name="赎回金额解冻" isForCompensation="true" camunda:delegateExpression="${tradeServiceTask}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="acctChangeType">UNFREEZE</camunda:inputParameter>
+          <camunda:inputParameter name="subSeqNo">${ServiceTask_1p01o9b_subSeqNo}</camunda:inputParameter>
+          <camunda:inputParameter name="fundOrderNo">${ServiceTask_1p01o9b_fundOrderNo}</camunda:inputParameter>
+          <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+          <camunda:inputParameter name="tradeInfo">
+            <camunda:script scriptFormat="groovy">index = 0;
+        tmp = S("{}");
+              tmp.prop("baseAcctNo", global.prop('acctNo')); 
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("delegatePlatformId", global.prop('sourcePlatformId'));
+              tmp.prop("delegateAppId", global.prop('sourceAppId'));
+              tmp.prop("tradeAmount", global.prop('tradeAmount'));
+              tmp.prop("freezeSeqNo", ServiceTask_1p01o9b_freezeSeqNo);</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="freezeSeqNo">${ServiceTask_1p01o9b_freezeSeqNo}</camunda:inputParameter>
+          <camunda:inputParameter name="fundDetail">
+            <camunda:script scriptFormat="Groovy">tmp = S("{}");     
+              tmp.prop("systemId", global.prop('systemId'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              if (global.hasProp('baseCardNo')) {
+                  tmp.prop("cardNo", global.prop('baseCardNo'));
+              }
+              tmp.prop("orderNo", head.prop('transId'));  
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("acctChangeType", 'UNFREEZE');
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("fundStatus", 3);
+              tmp.prop("amount", global.prop('tradeAmount'));
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              tmp.prop("payerAcctNo", global.prop('acctNo'));
+              if (global.hasProp('sceneType')) {
+                 tmp.prop("sceneType", global.prop('sceneType'));
+              }
+              tmp.prop("debitSign", 0);
+              tmp.prop("creditSign", 0);</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+        <camunda:executionListener delegateExpression="${createFundDetailListener}" event="start" />
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:subProcess id="SubProcess_1wrdmk3" name="解冻支付(跨行转出)带幂等重试">
+      <bpmn:incoming>Flow_0lv3cia</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0f7nf1s</bpmn:outgoing>
+      <bpmn:endEvent id="EndEvent_16yxqyk">
+        <bpmn:incoming>SequenceFlow_1skm3k8</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:scriptTask id="ScriptTask_0hh75au" name="休眠" scriptFormat="groovy">
+        <bpmn:incoming>SequenceFlow_0i1u40j</bpmn:incoming>
+        <bpmn:incoming>SequenceFlow_1n9ell6</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0dr85ua</bpmn:outgoing>
+        <bpmn:script>sleep(500);</bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:exclusiveGateway id="ExclusiveGateway_0b3u7ie" default="SequenceFlow_0zuhqzi">
+        <bpmn:incoming>SequenceFlow_1pud6n1</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0zuhqzi</bpmn:outgoing>
+        <bpmn:outgoing>SequenceFlow_0i1u40j</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:scriptTask id="ScriptTask_1geg0ld" name="设置index" scriptFormat="groovy">
+        <bpmn:incoming>SequenceFlow_0dr85ua</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_03uowhv</bpmn:outgoing>
+        <bpmn:script>index = 0;
+          if (execution.hasVariableLocal('retryIndex')) {
+            index = execution.getVariableLocal('retryIndex');
+          }
+          index++;
+          execution.setVariableLocal('retryIndex', index);</bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:startEvent id="StartEvent_1w4ml2h">
+        <bpmn:outgoing>SequenceFlow_0po3jyu</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="SequenceFlow_0zuhqzi" sourceRef="ExclusiveGateway_0b3u7ie" targetRef="Task_0ovmibm" />
+      <bpmn:sequenceFlow id="SequenceFlow_03uowhv" sourceRef="ScriptTask_1geg0ld" targetRef="ServiceTask_0ic8bu1" />
+      <bpmn:serviceTask id="ServiceTask_1b9w9sq" name="解冻支付(跨行转出)" camunda:delegateExpression="${tradeServiceTask}">
+        <bpmn:extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="acctChangeType">VA2OUT</camunda:inputParameter>
+            <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+            <camunda:inputParameter name="fundDetail">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("systemId", global.prop('systemId'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              if (global.hasProp('baseCardNo')) {
+                  tmp.prop("cardNo", global.prop('baseCardNo'));
+              }
+              tmp.prop("orderNo", head.prop('transId'));      
+              tmp.prop("combAcctType", global.prop('va2OutCombAcctType'));
+              tmp.prop("combAcctChildType", global.prop('va2OutCombAcctChildType'));
+              tmp.prop("combAcctNo", global.prop('va2OutCombAcctNo'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("acctChangeType", 'VA2OUT');
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("fundStatus", 3);
+              tmp.prop("amount", global.prop('tradeAmount'));
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              tmp.prop("payerAcctNo", global.prop('payerAcctNo'));
+              tmp.prop("payeeAcctNo", global.prop('othAcctNo'));
+              if (global.hasProp('othBankCode')) {
+                  tmp.prop("payeeBankCode", global.prop('othBankCode'));
+              }
+              if (global.hasProp('othBankName')) {
+                  tmp.prop("payeeBankName", global.prop('othBankName'));
+              }
+              if (global.hasProp('sceneType')) {
+                  tmp.prop("sceneType", global.prop('sceneType'));
+              }
+			  
+			  if(ServiceTask_1p01o9b_freezeSeqNo!=null){
+			     tmp.prop("freezeSeqNo", ServiceTask_1p01o9b_freezeSeqNo);
+			  }
+              tmp.prop("debitSign", 0);
+              tmp.prop("creditSign", 2);</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="tradeInfo">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("delegatePlatformId", global.prop('sourcePlatformId'));
+              tmp.prop("delegateAppId", global.prop('sourceAppId'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("baseAcctNo", global.prop('va2OutBaseAcctNo'));
+              if (global.hasProp('baseAcctName')) {
+                  tmp.prop("baseAcctName", global.prop('baseAcctName'));
+              }
+              tmp.prop("othAcctNo", global.prop('othAcctNo'));
+              if (global.hasProp('othAcctName')) {
+                  tmp.prop("othAcctName", global.prop('othAcctName'));
+              }
+              if (global.hasProp('othBankCode')) {
+                  tmp.prop("othBankNo", global.prop('othBankCode'));
+              }
+              if (global.hasProp('othBankName')) {
+                  tmp.prop("othBankName", global.prop('othBankName'));
+              }
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              tmp.prop("tradeAmount", global.prop('tradeAmount'));
+              tmp.prop("tranType", 'CM000005');
+              tmp.prop("businessType", '00000427');
+              if (global.hasProp('threeRefNo')) {
+                  tmp.prop("threeRefNo", global.prop('threeRefNo'));
+              }
+			   if(ServiceTask_1p01o9b_freezeSeqNo!=null){
+			     tmp.prop("freezeSeqNo", ServiceTask_1p01o9b_freezeSeqNo);
+			  }
+			  tmp.prop("tradeSeqNo", global.prop('orderNo'));
+			  tmp.prop("seqNo", head.prop('transId'));</camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="ServiceTask_1b9w9sq_subSeqNo">${subSeqNo}</camunda:outputParameter>
+            <camunda:outputParameter name="normal_fundStatus">${fundStatus}</camunda:outputParameter>
+            <camunda:outputParameter name="ServiceTask_1b9w9sq_fundOrderNo">${fundOrderNo}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:executionListener delegateExpression="${createFundDetailListener}" event="start" />
+          <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+          <camunda:failedJobRetryTimeCycle>R0/PT5M</camunda:failedJobRetryTimeCycle>
+        </bpmn:extensionElements>
+        <bpmn:incoming>SequenceFlow_0po3jyu</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_06u051a</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="SequenceFlow_0po3jyu" sourceRef="StartEvent_1w4ml2h" targetRef="ServiceTask_1b9w9sq" />
+      <bpmn:sequenceFlow id="SequenceFlow_0dr85ua" sourceRef="ScriptTask_0hh75au" targetRef="ScriptTask_1geg0ld" />
+      <bpmn:serviceTask id="ServiceTask_0ic8bu1" name="交易状态查询" camunda:delegateExpression="${queryStatusServiceTask}">
+        <bpmn:extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="tradeInfo">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("subSeqNo",ServiceTask_1b9w9sq_subSeqNo);
+              tmp.prop("baseAcctNo", global.prop('acctNo'));
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("delegatePlatformId",route.prop('platformId'));
+              tmp.prop("delegateAppId",route.prop('appId'));</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="fundOrderNo">${ServiceTask_1b9w9sq_fundOrderNo}</camunda:inputParameter>
+            <camunda:inputParameter name="subSeqNo">${ServiceTask_1b9w9sq_subSeqNo}</camunda:inputParameter>
+            <camunda:inputParameter name="fromStatus">${normal_fundStatus}</camunda:inputParameter>
+            <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+            <camunda:outputParameter name="composition_fundStatus">${fundStatus}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>SequenceFlow_03uowhv</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1pud6n1</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="SequenceFlow_1pud6n1" sourceRef="ServiceTask_0ic8bu1" targetRef="ExclusiveGateway_0b3u7ie" />
+      <bpmn:sequenceFlow id="SequenceFlow_0i1u40j" sourceRef="ExclusiveGateway_0b3u7ie" targetRef="ScriptTask_0hh75au">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${composition_fundStatus==3 &amp;&amp; retryIndex &lt; 2}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:exclusiveGateway id="ExclusiveGateway_0qxtwhq" default="SequenceFlow_0fm1oyf">
+        <bpmn:incoming>SequenceFlow_06u051a</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1n9ell6</bpmn:outgoing>
+        <bpmn:outgoing>SequenceFlow_0fm1oyf</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="SequenceFlow_06u051a" sourceRef="ServiceTask_1b9w9sq" targetRef="ExclusiveGateway_0qxtwhq" />
+      <bpmn:sequenceFlow id="SequenceFlow_1n9ell6" sourceRef="ExclusiveGateway_0qxtwhq" targetRef="ScriptTask_0hh75au">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${normal_fundStatus==3}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="SequenceFlow_0fm1oyf" sourceRef="ExclusiveGateway_0qxtwhq" targetRef="Task_0ovmibm" />
+      <bpmn:sequenceFlow id="SequenceFlow_1skm3k8" sourceRef="Task_0ovmibm" targetRef="EndEvent_16yxqyk" />
+      <bpmn:serviceTask id="Task_0ovmibm" name="设置资金状态和异常" camunda:delegateExpression="${setStatusAndException}">
+        <bpmn:incoming>SequenceFlow_0zuhqzi</bpmn:incoming>
+        <bpmn:incoming>SequenceFlow_0fm1oyf</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1skm3k8</bpmn:outgoing>
+      </bpmn:serviceTask>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="SequenceFlow_0f7nf1s" sourceRef="SubProcess_1wrdmk3" targetRef="ExclusiveGateway_1l8jrvt" />
+    <bpmn:serviceTask id="ServiceTask_0ihghj1" name="余额冻结" camunda:delegateExpression="${freezeServiceTask}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="acctChangeType">FREEZE</camunda:inputParameter>
+          <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+          <camunda:inputParameter name="fundDetail">
+            <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("systemId", global.prop('systemId'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("acctNo", global.prop('baseAcctNo'));
+              if (global.hasProp('baseCardNo')) {
+              tmp.prop("cardNo", global.prop('baseCardNo'));
+              }
+              tmp.prop("orderNo", head.prop('transId'));
+              tmp.prop("combAcctType", combAcctInfo.prop('combAcctType'));
+              tmp.prop("combAcctChildType", combAcctInfo.prop('combAcctChildType'));
+              tmp.prop("combAcctNo", combAcctInfo.prop('combAcctNo'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("acctChangeType", 'FREEZE');
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("fundStatus", 3);
+              tmp.prop("amount", global.prop('actualAmount'));
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('acctDate'));
+              if (global.hasProp('sceneType')) {
+              tmp.prop("sceneType", global.prop('sceneType'));
+              }
+              tmp.prop("payerAcctNo", global.prop('baseAcctNo'));
+              tmp.prop("debitSign", 0);
+              tmp.prop("creditSign", 0);</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="freezeTradeInfo">
+            <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("delegatePlatformId", global.prop('sourcePlatformId'));
+              tmp.prop("delegateAppId", global.prop('sourceAppId'));
+              tmp.prop("acctNo", global.prop('baseAcctNo'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("baseAcctNo", global.prop('baseAcctNo'));
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('acctDate'));
+              tmp.prop("tradeAmount", global.prop('actualAmount'));
+              tmp.prop("tranType", 'CM000006');
+              tmp.prop("businessType", '00000180');
+              tmp.prop("freezeDays", 30);</camunda:script>
+          </camunda:inputParameter>
+          <camunda:outputParameter name="ServiceTask_0icxwpn_fundStatus">${fundStatus}</camunda:outputParameter>
+          <camunda:outputParameter name="ServiceTask_0icxwpn_freezeSeqNo">${execution.hasVariableLocal('freezeSeqNo')? freezeSeqNo : null}</camunda:outputParameter>
+        </camunda:inputOutput>
+        <camunda:executionListener delegateExpression="${createFundDetailListener}" event="start" />
+        <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1lsibv2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1e4ibpx</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1pw1owy</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1832ixv</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1e4ibpx" name="成功" sourceRef="ServiceTask_0ihghj1" targetRef="Task_0076whl" />
+    <bpmn:sequenceFlow id="SequenceFlow_1pw1owy" name="失败" sourceRef="ServiceTask_0ihghj1" targetRef="Task_1ssz561" />
+    <bpmn:sequenceFlow id="SequenceFlow_1832ixv" name="处理中" sourceRef="ServiceTask_0ihghj1" targetRef="Task_0lur42g" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ig0pmg" sourceRef="Task_1ssz561" targetRef="EndEvent_1fx1p9o" />
+    <bpmn:endEvent id="EndEvent_1fx1p9o">
+      <bpmn:incoming>SequenceFlow_0ig0pmg</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_10fk6dh" />
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="BoundaryEvent_1hbkwrd" attachedToRef="ServiceTask_0ihghj1">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="ServiceTask_000e0yu" name="余额解冻" isForCompensation="true" camunda:delegateExpression="${tradeServiceTask}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="acctChangeType">UNFREEZE</camunda:inputParameter>
+          <camunda:inputParameter name="subSeqNo">${ServiceTask_1p01o9b_subSeqNo}</camunda:inputParameter>
+          <camunda:inputParameter name="fundOrderNo">${ServiceTask_1p01o9b_fundOrderNo}</camunda:inputParameter>
+          <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+          <camunda:inputParameter name="tradeInfo">
+            <camunda:script scriptFormat="groovy">index = 0;
+        tmp = S("{}");
+              tmp.prop("baseAcctNo", global.prop('acctNo')); 
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("delegatePlatformId", global.prop('sourcePlatformId'));
+              tmp.prop("delegateAppId", global.prop('sourceAppId'));
+              tmp.prop("tradeAmount", global.prop('tradeAmount'));
+              tmp.prop("freezeSeqNo", ServiceTask_1p01o9b_freezeSeqNo);</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="freezeSeqNo">${ServiceTask_1p01o9b_freezeSeqNo}</camunda:inputParameter>
+          <camunda:inputParameter name="fundDetail">
+            <camunda:script scriptFormat="Groovy">tmp = S("{}");     
+              tmp.prop("systemId", global.prop('systemId'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              if (global.hasProp('baseCardNo')) {
+                  tmp.prop("cardNo", global.prop('baseCardNo'));
+              }
+              tmp.prop("orderNo", head.prop('transId'));  
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("acctChangeType", 'UNFREEZE');
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("fundStatus", 3);
+              tmp.prop("amount", global.prop('tradeAmount'));
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              tmp.prop("payerAcctNo", global.prop('acctNo'));
+              if (global.hasProp('sceneType')) {
+                 tmp.prop("sceneType", global.prop('sceneType'));
+              }
+              tmp.prop("debitSign", 0);
+              tmp.prop("creditSign", 0);</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+        <camunda:executionListener delegateExpression="${createFundDetailListener}" event="start" />
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_03qr77l">
+      <bpmn:outgoing>SequenceFlow_1qjp7qb</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_10ky4z1" name="请求金额&#60;=账户余额" default="SequenceFlow_1byik01">
+      <bpmn:incoming>SequenceFlow_01cooyx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1byik01</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0ccrn3g</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0ldwy3g" name="账户余额是否为零" default="SequenceFlow_1lsibv2">
+      <bpmn:incoming>SequenceFlow_1byik01</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1lsibv2</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1i9e7a9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1qjp7qb" sourceRef="StartEvent_03qr77l" targetRef="ServiceTask_1rpm8pi" />
+    <bpmn:sequenceFlow id="SequenceFlow_1byik01" name="N(余额不足)" sourceRef="ExclusiveGateway_10ky4z1" targetRef="ExclusiveGateway_0ldwy3g" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ccrn3g" name="Y(余额充足)" sourceRef="ExclusiveGateway_10ky4z1" targetRef="SubProcess_0jlurn8">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${availableBalance .compareTo(tradeAmount) &gt;= 0}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1lsibv2" name="N" sourceRef="ExclusiveGateway_0ldwy3g" targetRef="ServiceTask_0ihghj1" />
+    <bpmn:sequenceFlow id="SequenceFlow_1i9e7a9" name="Y(余额为零)" sourceRef="ExclusiveGateway_0ldwy3g" targetRef="SubProcess_1j0yirl">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${availableBalance.compareTo(BigDecimal.ZERO) == 0}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="ServiceTask_1rpm8pi" name="创建订单记录" camunda:delegateExpression="${tradeOrderServiceTask}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="tradeOrder">
+            <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("systemId", global.prop('systemId'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("messageCode", global.prop('messageCode'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              if (global.hasProp('baseCardNo')) {
+              tmp.prop("cardNo", global.prop('baseCardNo'));
+              }
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("orderType", global.prop('orderType'));
+              tmp.prop("orderNo", head.prop('transId'));
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("subSeqNo", head.prop('subTransSeq'));
+              tmp.prop("orderStatus", 3);
+              tmp.prop("currency", 'CNY');
+              tmp.prop("amount", global.prop('tradeAmount'));
+              tmp.prop("realPaidAmount", global.prop('tradeAmount'));
+              if (global.hasProp('merchantInfo') &amp;&amp; global.prop('merchantInfo').hasProp('merchantCode')) {
+              tmp.prop("merchantCode", global.prop('merchantInfo').prop('merchantCode'));
+              }
+              if (global.hasProp('merchantInfo') &amp;&amp; global.prop('merchantInfo').hasProp('merchantName')) {
+              tmp.prop("merchantName", global.prop('merchantInfo').prop('merchantName'));
+              }
+              if (global.hasProp('merchantInfo') &amp;&amp; global.prop('merchantInfo').hasProp('goodsName')) {
+              tmp.prop("goodsName", global.prop('merchantInfo').prop('goodsName'));
+              }
+              if (global.hasProp('voucherNo')) {
+              tmp.prop("voucherNo", global.prop('voucherNo'));
+              }
+              if (global.hasProp('sceneType')) {
+              tmp.prop("sceneType", global.prop('sceneType'));
+              }
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("tradeTime", global.prop('tradeTime'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+			  if(global.hasProp('cardNo')){
+			  tmp.prop("cardNo", global.prop('cardNo'));
+			  }</camunda:script>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="orderExtend">
+            <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("orderNo", head.prop('transId'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("paramKey", 'result');
+              tmp.prop("paramValue", '');</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1qjp7qb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_01cooyx</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_01cooyx" sourceRef="ServiceTask_1rpm8pi" targetRef="ExclusiveGateway_10ky4z1" />
+    <bpmn:subProcess id="SubProcess_0jlurn8" name="跨行转出带幂等重试">
+      <bpmn:incoming>SequenceFlow_0ccrn3g</bpmn:incoming>
+      <bpmn:endEvent id="EndEvent_1o0hpxr">
+        <bpmn:incoming>SequenceFlow_1626vnf</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:scriptTask id="ScriptTask_08623fs" name="休眠" scriptFormat="groovy">
+        <bpmn:incoming>SequenceFlow_1hgy12n</bpmn:incoming>
+        <bpmn:incoming>SequenceFlow_0jxvn8c</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0seb7f2</bpmn:outgoing>
+        <bpmn:script>sleep(500);</bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:exclusiveGateway id="ExclusiveGateway_0nuj3jp" default="SequenceFlow_01zs69o">
+        <bpmn:incoming>SequenceFlow_1oqw174</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0jxvn8c</bpmn:outgoing>
+        <bpmn:outgoing>SequenceFlow_01zs69o</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:scriptTask id="ScriptTask_0twb47c" name="设置index" scriptFormat="groovy">
+        <bpmn:incoming>SequenceFlow_0seb7f2</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0wqctxb</bpmn:outgoing>
+        <bpmn:script>index = 0;
+          if (execution.hasVariableLocal('retryIndex')) {
+            index = execution.getVariableLocal('retryIndex');
+          }
+          index++;
+          execution.setVariableLocal('retryIndex', index);</bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:startEvent id="StartEvent_0quqq7b">
+        <bpmn:outgoing>SequenceFlow_1eg73ji</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="ServiceTask_0d8n38q" name="跨行转出" camunda:delegateExpression="${tradeServiceTask}">
+        <bpmn:extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="acctChangeType">VA2OUT</camunda:inputParameter>
+            <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+            <camunda:inputParameter name="fundDetail">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("systemId", global.prop('systemId'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              if (global.hasProp('baseCardNo')) {
+                  tmp.prop("cardNo", global.prop('baseCardNo'));
+              }
+              tmp.prop("orderNo", head.prop('transId'));      
+              tmp.prop("combAcctType", global.prop('va2OutCombAcctType'));
+              tmp.prop("combAcctChildType", global.prop('va2OutCombAcctChildType'));
+              tmp.prop("combAcctNo", global.prop('va2OutCombAcctNo'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("acctChangeType", 'VA2OUT');
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("fundStatus", 3);
+              tmp.prop("amount", global.prop('tradeAmount'));
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              tmp.prop("payerAcctNo", global.prop('payerAcctNo'));
+              tmp.prop("payeeAcctNo", global.prop('othAcctNo'));
+              if (global.hasProp('othBankCode')) {
+                  tmp.prop("payeeBankCode", global.prop('othBankCode'));
+              }
+              if (global.hasProp('othBankName')) {
+                  tmp.prop("payeeBankName", global.prop('othBankName'));
+              }
+              if (global.hasProp('sceneType')) {
+                  tmp.prop("sceneType", global.prop('sceneType'));
+              }
+			  
+			  if(ServiceTask_1p01o9b_freezeSeqNo!=null){
+			     tmp.prop("freezeSeqNo", ServiceTask_1p01o9b_freezeSeqNo);
+			  }
+              tmp.prop("debitSign", 0);
+              tmp.prop("creditSign", 2);</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="tradeInfo">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("platformId", route.prop('platformId'));
+              tmp.prop("appId", route.prop('appId'));
+              tmp.prop("delegatePlatformId", global.prop('sourcePlatformId'));
+              tmp.prop("delegateAppId", global.prop('sourceAppId'));
+              tmp.prop("acctNo", global.prop('acctNo'));
+              tmp.prop("customerId", global.prop('customerId'));
+              tmp.prop("baseAcctNo", global.prop('va2OutBaseAcctNo'));
+              if (global.hasProp('baseAcctName')) {
+                  tmp.prop("baseAcctName", global.prop('baseAcctName'));
+              }
+              tmp.prop("othAcctNo", global.prop('othAcctNo'));
+              if (global.hasProp('othAcctName')) {
+                  tmp.prop("othAcctName", global.prop('othAcctName'));
+              }
+              if (global.hasProp('othBankCode')) {
+                  tmp.prop("othBankNo", global.prop('othBankCode'));
+              }
+              if (global.hasProp('othBankName')) {
+                  tmp.prop("othBankName", global.prop('othBankName'));
+              }
+              tmp.prop("tradeDate", head.prop('sysDate'));
+              tmp.prop("checkDate", global.prop('checkDate'));
+              tmp.prop("tradeAmount", global.prop('tradeAmount'));
+              tmp.prop("tranType", 'CM000005');
+              tmp.prop("businessType", '00000427');
+              if (global.hasProp('threeRefNo')) {
+                  tmp.prop("threeRefNo", global.prop('threeRefNo'));
+              }
+			   if(ServiceTask_1p01o9b_freezeSeqNo!=null){
+			     tmp.prop("freezeSeqNo", ServiceTask_1p01o9b_freezeSeqNo);
+			  }
+			  tmp.prop("tradeSeqNo", global.prop('orderNo'));
+			  tmp.prop("seqNo", head.prop('transId'));</camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="ServiceTask_1b9w9sq_subSeqNo">${subSeqNo}</camunda:outputParameter>
+            <camunda:outputParameter name="normal_fundStatus">${fundStatus}</camunda:outputParameter>
+            <camunda:outputParameter name="ServiceTask_1b9w9sq_fundOrderNo">${fundOrderNo}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:executionListener delegateExpression="${createFundDetailListener}" event="start" />
+          <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+          <camunda:failedJobRetryTimeCycle>R0/PT5M</camunda:failedJobRetryTimeCycle>
+        </bpmn:extensionElements>
+        <bpmn:incoming>SequenceFlow_1eg73ji</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1y6xs6u</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:serviceTask id="ServiceTask_1bak7cf" name="交易状态查询" camunda:delegateExpression="${queryStatusServiceTask}">
+        <bpmn:extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="tradeInfo">
+              <camunda:script scriptFormat="groovy">tmp = S("{}");
+              tmp.prop("seqNo", head.prop('transId'));
+              tmp.prop("subSeqNo",ServiceTask_1b9w9sq_subSeqNo);
+              tmp.prop("baseAcctNo", global.prop('acctNo'));
+              tmp.prop("serviceName", global.prop('serviceName'));
+              tmp.prop("delegatePlatformId",route.prop('platformId'));
+              tmp.prop("delegateAppId",route.prop('appId'));</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="fundOrderNo">${ServiceTask_1b9w9sq_fundOrderNo}</camunda:inputParameter>
+            <camunda:inputParameter name="subSeqNo">${ServiceTask_1b9w9sq_subSeqNo}</camunda:inputParameter>
+            <camunda:inputParameter name="fromStatus">${normal_fundStatus}</camunda:inputParameter>
+            <camunda:inputParameter name="customerId">${global.prop('customerId').value()}</camunda:inputParameter>
+            <camunda:outputParameter name="composition_fundStatus">${fundStatus}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:executionListener delegateExpression="${updateFundDetailListener}" event="end" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>SequenceFlow_0wqctxb</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1oqw174</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:exclusiveGateway id="ExclusiveGateway_19emlrs" default="SequenceFlow_0c8h7sr">
+        <bpmn:incoming>SequenceFlow_1y6xs6u</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0c8h7sr</bpmn:outgoing>
+        <bpmn:outgoing>SequenceFlow_1hgy12n</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:serviceTask id="ServiceTask_0srpjzt" name="设置资金状态和异常" camunda:delegateExpression="${setStatusAndException}">
+        <bpmn:incoming>SequenceFlow_0c8h7sr</bpmn:incoming>
+        <bpmn:incoming>SequenceFlow_01zs69o</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1626vnf</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="SequenceFlow_1626vnf" sourceRef="ServiceTask_0srpjzt" targetRef="EndEvent_1o0hpxr" />
+      <bpmn:sequenceFlow id="SequenceFlow_0c8h7sr" sourceRef="ExclusiveGateway_19emlrs" targetRef="ServiceTask_0srpjzt" />
+      <bpmn:sequenceFlow id="SequenceFlow_1hgy12n" sourceRef="ExclusiveGateway_19emlrs" targetRef="ScriptTask_08623fs">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${normal_fundStatus==3}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="SequenceFlow_1y6xs6u" sourceRef="ServiceTask_0d8n38q" targetRef="ExclusiveGateway_19emlrs" />
+      <bpmn:sequenceFlow id="SequenceFlow_0jxvn8c" sourceRef="ExclusiveGateway_0nuj3jp" targetRef="ScriptTask_08623fs">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${composition_fundStatus==3 &amp;&amp; retryIndex &lt; 2}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="SequenceFlow_1oqw174" sourceRef="ServiceTask_1bak7cf" targetRef="ExclusiveGateway_0nuj3jp" />
+      <bpmn:sequenceFlow id="SequenceFlow_0seb7f2" sourceRef="ScriptTask_08623fs" targetRef="ScriptTask_0twb47c" />
+      <bpmn:sequenceFlow id="SequenceFlow_1eg73ji" sourceRef="StartEvent_0quqq7b" targetRef="ServiceTask_0d8n38q" />
+      <bpmn:sequenceFlow id="SequenceFlow_0wqctxb" sourceRef="ScriptTask_0twb47c" targetRef="ServiceTask_1bak7cf" />
+      <bpmn:sequenceFlow id="SequenceFlow_01zs69o" sourceRef="ExclusiveGateway_0nuj3jp" targetRef="ServiceTask_0srpjzt" />
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="SequenceFlow_1syiui9" sourceRef="Task_0076whl" targetRef="SubProcess_1j0yirl" />
+    <bpmn:scriptTask id="Task_0076whl" name="设置交易金额(交易金额减去账户余额)">
+      <bpmn:incoming>SequenceFlow_1e4ibpx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1syiui9</bpmn:outgoing>
+      <bpmn:script> BigDecimal tradeAmount = (BigDecimal)execution.getVariable("tradeAmount");
+        BigDecimal vailBalcance = (BigDecimal)execution.getVariable("vailBalcance");
+        execution.setVariable("tradeAmount", tradeAmount.subtract(vailBalcance));</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:association id="Association_0rsawzo" associationDirection="One" sourceRef="BoundaryEvent_0kua7kr" targetRef="ServiceTask_0u3zozm" />
+    <bpmn:association id="Association_0mu36ss" associationDirection="One" sourceRef="BoundaryEvent_1hbkwrd" targetRef="ServiceTask_000e0yu" />
+  </bpmn:process>
+  <bpmn:error id="Error_0wufm3t" name="失败" errorCode="failed" />
+  <bpmn:error id="Error_1pi1dc6" name="失败" errorCode="failed" />
+  <bpmn:error id="Error_10fk6dh" name="失败" errorCode="failed" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="BOF_WITHDRAW">
+      <bpmndi:BPMNEdge id="SequenceFlow_0273eu3_di" bpmnElement="SequenceFlow_0273eu3">
+        <di:waypoint x="1462" y="479" />
+        <di:waypoint x="1462" y="189" />
+        <di:waypoint x="2055" y="189" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1466" y="336" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03g98xb_di" bpmnElement="SequenceFlow_03g98xb">
+        <di:waypoint x="1912" y="479" />
+        <di:waypoint x="1912" y="296" />
+        <di:waypoint x="2055" y="296" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1914" y="394" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1avdmop_di" bpmnElement="SequenceFlow_1avdmop">
+        <di:waypoint x="1937" y="504" />
+        <di:waypoint x="2055" y="504" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1952" y="486" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13v1afg_di" bpmnElement="SequenceFlow_13v1afg">
+        <di:waypoint x="1487" y="504" />
+        <di:waypoint x="1580" y="504" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1523" y="486" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ofk0l5_di" bpmnElement="SequenceFlow_0ofk0l5">
+        <di:waypoint x="2155" y="504" />
+        <di:waypoint x="2200" y="504" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ddbx0t_di" bpmnElement="SequenceFlow_0ddbx0t">
+        <di:waypoint x="2155" y="274" />
+        <di:waypoint x="2357" y="274" />
+        <di:waypoint x="2357" y="486" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lv3cia_di" bpmnElement="Flow_0lv3cia">
+        <di:waypoint x="1630" y="504" />
+        <di:waypoint x="1740" y="504" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1661" y="485" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0vawkvx_di" bpmnElement="ExclusiveGateway_0vawkvx" isMarkerVisible="true">
+        <dc:Bounds x="1437" y="479" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0bcse8z_di" bpmnElement="EndEvent_0bcse8z">
+        <dc:Bounds x="2339" y="486" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1ssz561_di" bpmnElement="Task_1ssz561">
+        <dc:Bounds x="2055" y="128" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1ur2lyu_di" bpmnElement="Task_1ur2lyu">
+        <dc:Bounds x="2055" y="464" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_0lur42g_di" bpmnElement="Task_0lur42g">
+        <dc:Bounds x="2055" y="234" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1l8jrvt_di" bpmnElement="ExclusiveGateway_1l8jrvt" isMarkerVisible="true">
+        <dc:Bounds x="1887" y="479" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1ott20n_di" bpmnElement="Gateway_1ott20n" isMarkerVisible="true">
+        <dc:Bounds x="1580" y="479" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0zcifao_di" bpmnElement="SequenceFlow_0zcifao">
+        <di:waypoint x="1605" y="529" />
+        <di:waypoint x="1605" y="672" />
+        <di:waypoint x="2105" y="672" />
+        <di:waypoint x="2105" y="544" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1pfu5k8_di" bpmnElement="ServiceTask_1pfu5k8">
+        <dc:Bounds x="2200" y="464" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fwzhkq_di" bpmnElement="SequenceFlow_0fwzhkq">
+        <di:waypoint x="2300" y="504" />
+        <di:waypoint x="2339" y="504" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0whelso_di" bpmnElement="SequenceFlow_0whelso">
+        <di:waypoint x="1912" y="529" />
+        <di:waypoint x="1912" y="602" />
+        <di:waypoint x="2003" y="602" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1922" y="533" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_11mkw7o_di" bpmnElement="SequenceFlow_11mkw7o">
+        <di:waypoint x="1473" y="490" />
+        <di:waypoint x="1622" y="284" />
+        <di:waypoint x="2054" y="284" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1496" y="432" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SubProcess_1j0yirl_di" bpmnElement="SubProcess_1j0yirl" isExpanded="false">
+        <dc:Bounds x="1271" y="464" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0e2j5xi_di" bpmnElement="EndEvent_0e2j5xi">
+        <dc:Bounds x="1582" y="556" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_164fvis_di" bpmnElement="ScriptTask_164fvis">
+        <dc:Bounds x="1122" y="393" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0qf1dxs_di" bpmnElement="ExclusiveGateway_0qf1dxs" isMarkerVisible="true">
+        <dc:Bounds x="1444" y="549" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1p01o9b_di" bpmnElement="ServiceTask_1p01o9b">
+        <dc:Bounds x="1280" y="534" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_18xyk6k_di" bpmnElement="ScriptTask_18xyk6k">
+        <dc:Bounds x="1122" y="534" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0fb2yv4_di" bpmnElement="StartEvent_0fb2yv4">
+        <dc:Bounds x="1024" y="556" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_067avdo_di" bpmnElement="SequenceFlow_067avdo">
+        <di:waypoint x="1060" y="574" />
+        <di:waypoint x="1122" y="574" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0m7y4p0_di" bpmnElement="SequenceFlow_0m7y4p0">
+        <di:waypoint x="1222" y="574" />
+        <di:waypoint x="1280" y="574" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1a9gbzt_di" bpmnElement="SequenceFlow_1a9gbzt">
+        <di:waypoint x="1380" y="574" />
+        <di:waypoint x="1444" y="574" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0knsy78_di" bpmnElement="SequenceFlow_0knsy78">
+        <di:waypoint x="1172" y="473" />
+        <di:waypoint x="1172" y="534" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_15qy8np_di" bpmnElement="SequenceFlow_15qy8np">
+        <di:waypoint x="1494" y="574" />
+        <di:waypoint x="1582" y="574" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0qrak0j_di" bpmnElement="SequenceFlow_0qrak0j">
+        <di:waypoint x="1469" y="549" />
+        <di:waypoint x="1469" y="433" />
+        <di:waypoint x="1222" y="433" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0rweac7_di" bpmnElement="SequenceFlow_0rweac7">
+        <di:waypoint x="1371" y="504" />
+        <di:waypoint x="1437" y="504" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_131w3ao_di" bpmnElement="EndEvent_1dm79le">
+        <dc:Bounds x="2003" y="584" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1541" y="215" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_06rl9xr_di" bpmnElement="SubProcess_0i7abqv" isExpanded="true">
+        <dc:Bounds x="589" y="185" width="294" height="148" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0u2cgp7_di" bpmnElement="StartEvent_1bga5if">
+        <dc:Bounds x="632" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_01axdm2_di" bpmnElement="SequenceFlow_01axdm2">
+        <di:waypoint x="668" y="280" />
+        <di:waypoint x="718" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1dqvy5c_di" bpmnElement="EndEvent_1dqvy5c">
+        <dc:Bounds x="804" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0rxsnmk_di" bpmnElement="SequenceFlow_0rxsnmk">
+        <di:waypoint x="754" y="280" />
+        <di:waypoint x="804" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_0r5afhs_di" bpmnElement="IntermediateThrowEvent_0zhrnkl">
+        <dc:Bounds x="718" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_07m732l_di" bpmnElement="BoundaryEvent_0kua7kr">
+        <dc:Bounds x="1333" y="526" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0u3zozm_di" bpmnElement="ServiceTask_0u3zozm">
+        <dc:Bounds x="1290" y="665" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0rsawzo_di" bpmnElement="Association_0rsawzo">
+        <di:waypoint x="1351" y="562" />
+        <di:waypoint x="1351" y="665" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SubProcess_1wrdmk3_di" bpmnElement="SubProcess_1wrdmk3" isExpanded="false">
+        <dc:Bounds x="1742" y="464" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_16yxqyk_di" bpmnElement="EndEvent_16yxqyk">
+        <dc:Bounds x="2294" y="493" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_0hh75au_di" bpmnElement="ScriptTask_0hh75au">
+        <dc:Bounds x="1641" y="471" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0b3u7ie_di" bpmnElement="ExclusiveGateway_0b3u7ie" isMarkerVisible="true">
+        <dc:Bounds x="2095" y="486" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_1geg0ld_di" bpmnElement="ScriptTask_1geg0ld">
+        <dc:Bounds x="1773" y="471" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1w4ml2h_di" bpmnElement="StartEvent_1w4ml2h">
+        <dc:Bounds x="1254" y="493" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0zuhqzi_di" bpmnElement="SequenceFlow_0zuhqzi">
+        <di:waypoint x="2145" y="511" />
+        <di:waypoint x="2174" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03uowhv_di" bpmnElement="SequenceFlow_03uowhv">
+        <di:waypoint x="1873" y="511" />
+        <di:waypoint x="1926" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1b9w9sq_di" bpmnElement="ServiceTask_1b9w9sq">
+        <dc:Bounds x="1362" y="471" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0po3jyu_di" bpmnElement="SequenceFlow_0po3jyu">
+        <di:waypoint x="1290" y="511" />
+        <di:waypoint x="1362" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0dr85ua_di" bpmnElement="SequenceFlow_0dr85ua">
+        <di:waypoint x="1741" y="511" />
+        <di:waypoint x="1773" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ic8bu1_di" bpmnElement="ServiceTask_0ic8bu1">
+        <dc:Bounds x="1926" y="471" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1pud6n1_di" bpmnElement="SequenceFlow_1pud6n1">
+        <di:waypoint x="2026" y="511" />
+        <di:waypoint x="2095" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0i1u40j_di" bpmnElement="SequenceFlow_0i1u40j">
+        <di:waypoint x="2120" y="486" />
+        <di:waypoint x="2120" y="409" />
+        <di:waypoint x="1691" y="409" />
+        <di:waypoint x="1691" y="471" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0qxtwhq_di" bpmnElement="ExclusiveGateway_0qxtwhq" isMarkerVisible="true">
+        <dc:Bounds x="1534" y="486" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_06u051a_di" bpmnElement="SequenceFlow_06u051a">
+        <di:waypoint x="1462" y="511" />
+        <di:waypoint x="1534" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1n9ell6_di" bpmnElement="SequenceFlow_1n9ell6">
+        <di:waypoint x="1584" y="511" />
+        <di:waypoint x="1641" y="511" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="773" y="918" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fm1oyf_di" bpmnElement="SequenceFlow_0fm1oyf">
+        <di:waypoint x="1559" y="536" />
+        <di:waypoint x="1559" y="599" />
+        <di:waypoint x="2209" y="599" />
+        <di:waypoint x="2209" y="551" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1085" y="581" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1skm3k8_di" bpmnElement="SequenceFlow_1skm3k8">
+        <di:waypoint x="2274" y="511" />
+        <di:waypoint x="2294" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0f7nf1s_di" bpmnElement="SequenceFlow_0f7nf1s">
+        <di:waypoint x="1842" y="504" />
+        <di:waypoint x="1887" y="504" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0r8kjke_di" bpmnElement="Task_0ovmibm">
+        <dc:Bounds x="2174" y="471" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0ihghj1_di" bpmnElement="ServiceTask_0ihghj1">
+        <dc:Bounds x="943" y="464" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1e4ibpx_di" bpmnElement="SequenceFlow_1e4ibpx">
+        <di:waypoint x="1043" y="504" />
+        <di:waypoint x="1129" y="504" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1061" y="484" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1pw1owy_di" bpmnElement="SequenceFlow_1pw1owy">
+        <di:waypoint x="993" y="464" />
+        <di:waypoint x="993" y="168" />
+        <di:waypoint x="2055" y="168" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="997" y="313" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1832ixv_di" bpmnElement="SequenceFlow_1832ixv">
+        <di:waypoint x="1041" y="469" />
+        <di:waypoint x="1306" y="274" />
+        <di:waypoint x="2055" y="274" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1166" y="351" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ig0pmg_di" bpmnElement="SequenceFlow_0ig0pmg">
+        <di:waypoint x="2155" y="168" />
+        <di:waypoint x="2326" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0phbl9c_di" bpmnElement="EndEvent_1fx1p9o">
+        <dc:Bounds x="2326" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1l40toy_di" bpmnElement="BoundaryEvent_1hbkwrd">
+        <dc:Bounds x="999" y="526" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_000e0yu_di" bpmnElement="ServiceTask_000e0yu">
+        <dc:Bounds x="967" y="610" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0mu36ss_di" bpmnElement="Association_0mu36ss">
+        <di:waypoint x="1017" y="562" />
+        <di:waypoint x="1017" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_03qr77l_di" bpmnElement="StartEvent_03qr77l">
+        <dc:Bounds x="156" y="497" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_10ky4z1_di" bpmnElement="ExclusiveGateway_10ky4z1" isMarkerVisible="true">
+        <dc:Bounds x="521" y="490" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="506" y="453" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0ldwy3g_di" bpmnElement="ExclusiveGateway_0ldwy3g" isMarkerVisible="true">
+        <dc:Bounds x="795" y="490" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="776" y="466" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qjp7qb_di" bpmnElement="SequenceFlow_1qjp7qb">
+        <di:waypoint x="192" y="515" />
+        <di:waypoint x="313" y="515" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1byik01_di" bpmnElement="SequenceFlow_1byik01">
+        <di:waypoint x="571" y="515" />
+        <di:waypoint x="795" y="515" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="654" y="497" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ccrn3g_di" bpmnElement="SequenceFlow_0ccrn3g">
+        <di:waypoint x="546" y="540" />
+        <di:waypoint x="546" y="679" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="533" y="603" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1lsibv2_di" bpmnElement="SequenceFlow_1lsibv2">
+        <di:waypoint x="845" y="515" />
+        <di:waypoint x="938" y="515" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="875" y="489" width="8" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1i9e7a9_di" bpmnElement="SequenceFlow_1i9e7a9">
+        <di:waypoint x="820" y="540" />
+        <di:waypoint x="820" y="769" />
+        <di:waypoint x="1279" y="769" />
+        <di:waypoint x="1279" y="543" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1021" y="751" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1rpm8pi_di" bpmnElement="ServiceTask_1rpm8pi">
+        <dc:Bounds x="313" y="475" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_01cooyx_di" bpmnElement="SequenceFlow_01cooyx">
+        <di:waypoint x="413" y="515" />
+        <di:waypoint x="521" y="515" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SubProcess_0jlurn8_di" bpmnElement="SubProcess_0jlurn8" isExpanded="false">
+        <dc:Bounds x="496" y="679" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1o0hpxr_di" bpmnElement="EndEvent_1o0hpxr">
+        <dc:Bounds x="1048" y="708" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_08623fs_di" bpmnElement="ScriptTask_08623fs">
+        <dc:Bounds x="395" y="686" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0nuj3jp_di" bpmnElement="ExclusiveGateway_0nuj3jp" isMarkerVisible="true">
+        <dc:Bounds x="849" y="701" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_0twb47c_di" bpmnElement="ScriptTask_0twb47c">
+        <dc:Bounds x="527" y="686" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0quqq7b_di" bpmnElement="StartEvent_0quqq7b">
+        <dc:Bounds x="8" y="708" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0d8n38q_di" bpmnElement="ServiceTask_0d8n38q">
+        <dc:Bounds x="116" y="686" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1bak7cf_di" bpmnElement="ServiceTask_1bak7cf">
+        <dc:Bounds x="680" y="686" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_19emlrs_di" bpmnElement="ExclusiveGateway_19emlrs" isMarkerVisible="true">
+        <dc:Bounds x="288" y="701" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0srpjzt_di" bpmnElement="ServiceTask_0srpjzt">
+        <dc:Bounds x="928" y="686" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1626vnf_di" bpmnElement="SequenceFlow_1626vnf">
+        <di:waypoint x="1028" y="726" />
+        <di:waypoint x="1048" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0c8h7sr_di" bpmnElement="SequenceFlow_0c8h7sr">
+        <di:waypoint x="313" y="751" />
+        <di:waypoint x="313" y="814" />
+        <di:waypoint x="963" y="814" />
+        <di:waypoint x="963" y="766" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hgy12n_di" bpmnElement="SequenceFlow_1hgy12n">
+        <di:waypoint x="338" y="726" />
+        <di:waypoint x="395" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1y6xs6u_di" bpmnElement="SequenceFlow_1y6xs6u">
+        <di:waypoint x="216" y="726" />
+        <di:waypoint x="288" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0jxvn8c_di" bpmnElement="SequenceFlow_0jxvn8c">
+        <di:waypoint x="874" y="701" />
+        <di:waypoint x="874" y="624" />
+        <di:waypoint x="445" y="624" />
+        <di:waypoint x="445" y="686" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1oqw174_di" bpmnElement="SequenceFlow_1oqw174">
+        <di:waypoint x="780" y="726" />
+        <di:waypoint x="849" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0seb7f2_di" bpmnElement="SequenceFlow_0seb7f2">
+        <di:waypoint x="495" y="726" />
+        <di:waypoint x="527" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1eg73ji_di" bpmnElement="SequenceFlow_1eg73ji">
+        <di:waypoint x="44" y="726" />
+        <di:waypoint x="116" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wqctxb_di" bpmnElement="SequenceFlow_0wqctxb">
+        <di:waypoint x="627" y="726" />
+        <di:waypoint x="680" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_01zs69o_di" bpmnElement="SequenceFlow_01zs69o">
+        <di:waypoint x="899" y="726" />
+        <di:waypoint x="928" y="726" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1syiui9_di" bpmnElement="SequenceFlow_1syiui9">
+        <di:waypoint x="1229" y="504" />
+        <di:waypoint x="1271" y="504" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ScriptTask_0fxa9s4_di" bpmnElement="Task_0076whl">
+        <dc:Bounds x="1129" y="464" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
